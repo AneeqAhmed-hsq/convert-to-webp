@@ -9,91 +9,106 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 10px;
+            line-height: 1.4;
         }
         
         .container {
+            max-width: 600px;
+            margin: 0 auto;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 500px;
-            padding: 30px;
-            text-align: center;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         h1 {
             color: #333;
+            font-size: 22px;
             margin-bottom: 20px;
-            font-size: 24px;
+            text-align: center;
         }
         
-        .upload-box {
-            border: 3px dashed #667eea;
-            border-radius: 10px;
-            padding: 40px 20px;
+        .upload-section {
+            text-align: center;
             margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
         }
         
-        .upload-box:hover {
-            background: #f8f9ff;
-            border-color: #764ba2;
-        }
-        
-        .upload-icon {
-            font-size: 50px;
-            color: #667eea;
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
             margin-bottom: 10px;
         }
         
-        .upload-text {
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-label {
+            display: block;
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
             font-size: 16px;
-            color: #555;
-            margin-bottom: 5px;
+            transition: background 0.3s;
         }
         
-        .upload-subtext {
+        .file-label:hover {
+            background: #45a049;
+        }
+        
+        .selected-files {
             font-size: 14px;
-            color: #888;
-        }
-        
-        #fileInput {
-            display: none;
+            color: #666;
+            margin-top: 5px;
+            min-height: 20px;
         }
         
         .quality-section {
-            margin: 20px 0;
-            text-align: left;
+            margin: 15px 0;
         }
         
         .quality-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
         }
         
         .quality-value {
+            color: #4CAF50;
             font-weight: bold;
-            color: #667eea;
         }
         
-        input[type="range"] {
+        .quality-slider {
             width: 100%;
             height: 6px;
             background: #ddd;
             border-radius: 3px;
             outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .quality-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4CAF50;
+            border-radius: 50%;
+            cursor: pointer;
         }
         
         .buttons {
@@ -103,40 +118,36 @@
             margin-top: 20px;
         }
         
-        button {
+        .btn {
             padding: 12px;
             border: none;
             border-radius: 5px;
             font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: opacity 0.3s;
         }
         
-        .convert-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .btn-convert {
+            background: #2196F3;
             color: white;
         }
         
-        .convert-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .btn-convert:hover {
+            background: #0b7dda;
         }
         
-        .reset-btn {
-            background: #f0f0f0;
+        .btn-reset {
+            background: #f5f5f5;
             color: #333;
         }
         
-        .reset-btn:hover {
+        .btn-reset:hover {
             background: #e0e0e0;
         }
         
-        button:disabled {
-            opacity: 0.5;
+        .btn:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
         }
         
         .status {
@@ -147,31 +158,39 @@
             display: none;
         }
         
-        .success {
+        .status-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
         
-        .error {
+        .status-error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
         
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.3;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -179,32 +198,38 @@
     <div class="container">
         <h1>Image to WebP Converter</h1>
         
-        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-            <div class="upload-icon">🖼️</div>
-            <div class="upload-text">Click to upload images</div>
-            <div class="upload-subtext">or drag & drop files here</div>
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
+                <label for="fileInput" class="file-label">
+                    📁 Select Images
+                </label>
+            </div>
+            <div id="selectedFiles" class="selected-files"></div>
         </div>
-        
-        <input type="file" id="fileInput" accept="image/*" multiple>
         
         <div class="quality-section">
             <div class="quality-label">
-                <span>Quality: <span id="qualityValue" class="quality-value">85%</span></span>
-                <span id="fileCount">0 files selected</span>
+                <span>Quality:</span>
+                <span id="qualityValue" class="quality-value">85%</span>
             </div>
-            <input type="range" id="qualitySlider" min="1" max="100" value="85">
+            <input type="range" id="qualitySlider" class="quality-slider" min="1" max="100" value="85">
         </div>
         
         <div class="buttons">
-            <button id="convertBtn" class="convert-btn" disabled>
+            <button id="convertBtn" class="btn btn-convert" disabled>
                 Convert to WebP
             </button>
-            <button id="resetBtn" class="reset-btn">
-                Reset
+            <button id="resetBtn" class="btn btn-reset">
+                Clear All
             </button>
         </div>
         
         <div id="statusMessage" class="status"></div>
+        
+        <div class="info-text">
+            Convert JPG, PNG, GIF, BMP to WebP format. All processing happens in your browser.
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -214,7 +239,7 @@
         const fileInput = document.getElementById('fileInput');
         const qualitySlider = document.getElementById('qualitySlider');
         const qualityValue = document.getElementById('qualityValue');
-        const fileCount = document.getElementById('fileCount');
+        const selectedFiles = document.getElementById('selectedFiles');
         const convertBtn = document.getElementById('convertBtn');
         const resetBtn = document.getElementById('resetBtn');
         const statusMessage = document.getElementById('statusMessage');
@@ -223,45 +248,23 @@
         let uploadedFiles = [];
         let currentQuality = 85;
         
+        // Initialize
+        updateFileDisplay();
+        
         // Event Listeners
         fileInput.addEventListener('change', handleFileSelect);
         qualitySlider.addEventListener('input', updateQuality);
         convertBtn.addEventListener('click', convertImages);
         resetBtn.addEventListener('click', resetAll);
         
-        // Drag and drop functionality
-        const uploadBox = document.querySelector('.upload-box');
-        uploadBox.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadBox.style.borderColor = '#764ba2';
-            uploadBox.style.backgroundColor = '#f8f9ff';
-        });
-        
-        uploadBox.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadBox.style.borderColor = '#667eea';
-            uploadBox.style.backgroundColor = 'transparent';
-        });
-        
-        uploadBox.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadBox.style.borderColor = '#667eea';
-            uploadBox.style.backgroundColor = 'transparent';
-            
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                handleFileSelect();
-            }
-        });
-        
         // Functions
         function handleFileSelect() {
             if (!fileInput.files.length) return;
             
             uploadedFiles = Array.from(fileInput.files);
-            fileCount.textContent = `${uploadedFiles.length} files selected`;
+            updateFileDisplay();
             convertBtn.disabled = false;
-            showStatus(`Ready to convert ${uploadedFiles.length} images`, 'success');
+            showStatus(`${uploadedFiles.length} image(s) selected`, 'success');
         }
         
         function updateQuality() {
@@ -269,27 +272,37 @@
             qualityValue.textContent = `${currentQuality}%`;
         }
         
+        function updateFileDisplay() {
+            if (uploadedFiles.length === 0) {
+                selectedFiles.textContent = 'No files selected';
+                return;
+            }
+            
+            const fileList = uploadedFiles.map(file => file.name).join(', ');
+            const displayText = uploadedFiles.length > 3 
+                ? `${uploadedFiles.length} files selected` 
+                : fileList;
+            
+            selectedFiles.textContent = displayText;
+        }
+        
         async function convertImages() {
             if (!uploadedFiles.length) return;
             
             // Disable button and show loading
             convertBtn.disabled = true;
-            convertBtn.innerHTML = '<span class="loading"></span>Converting...';
+            convertBtn.textContent = 'Converting...';
             
             try {
                 const zip = new JSZip();
                 let convertedCount = 0;
-                let totalSizeBefore = 0;
-                let totalSizeAfter = 0;
                 
                 // Convert each image
                 for (let i = 0; i < uploadedFiles.length; i++) {
                     const file = uploadedFiles[i];
-                    totalSizeBefore += file.size;
                     
                     try {
                         const webpBlob = await convertToWebP(file, currentQuality);
-                        totalSizeAfter += webpBlob.size;
                         
                         // Add to ZIP
                         const fileName = file.name.replace(/\.[^/.]+$/, "") + '.webp';
@@ -299,6 +312,10 @@
                     } catch (error) {
                         console.error(`Error converting ${file.name}:`, error);
                     }
+                }
+                
+                if (convertedCount === 0) {
+                    throw new Error('No images could be converted');
                 }
                 
                 // Generate ZIP file
@@ -317,15 +334,8 @@
                 // Clean up
                 URL.revokeObjectURL(link.href);
                 
-                // Calculate savings
-                const savedPercent = ((totalSizeBefore - totalSizeAfter) / totalSizeBefore * 100).toFixed(1);
-                const savedSize = formatSize(totalSizeBefore - totalSizeAfter);
-                
                 // Show success message
-                showStatus(
-                    `✅ Success! Converted ${convertedCount} images. Saved ${savedPercent}% (${savedSize})`,
-                    'success'
-                );
+                showStatus(`✅ Converted ${convertedCount} image(s) to WebP format`, 'success');
                 
             } catch (error) {
                 console.error('Conversion error:', error);
@@ -374,33 +384,26 @@
             });
         }
         
-        function formatSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
         function showStatus(message, type) {
             statusMessage.textContent = message;
-            statusMessage.className = `status ${type}`;
+            statusMessage.className = `status status-${type}`;
             statusMessage.style.display = 'block';
             
-            // Auto-hide after 5 seconds
+            // Auto-hide after 4 seconds
             setTimeout(() => {
                 statusMessage.style.display = 'none';
-            }, 5000);
+            }, 4000);
         }
         
         function resetAll() {
             uploadedFiles = [];
             fileInput.value = '';
-            fileCount.textContent = '0 files selected';
+            updateFileDisplay();
             convertBtn.disabled = true;
             qualitySlider.value = 85;
             qualityValue.textContent = '85%';
             statusMessage.style.display = 'none';
+            showStatus('Cleared all files', 'success');
         }
     </script>
 </body>
