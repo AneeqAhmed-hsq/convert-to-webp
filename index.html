@@ -2,409 +2,822 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image to WebP Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WebP Converter | Quality Control Fixed</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f8f9fa;
-            padding: 10px;
-            line-height: 1.4;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f7 100%);
+            min-height: 100vh;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
+
+        .container {
+            max-width: 750px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 32px;
+            padding: 28px 24px 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
         h1 {
-            color: #333;
-            font-size: 22px;
-            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 600;
+            background: linear-gradient(120deg, #1e2a3a, #0f2b3d);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
             text-align: center;
+            letter-spacing: -0.2px;
         }
-        
+
+        .sub {
+            text-align: center;
+            color: #5b6e8c;
+            font-size: 14px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #e9edf2;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 8px;
+        }
+
         .upload-section {
-            text-align: center;
-            margin-bottom: 20px;
+            background: #f9fafc;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px dashed #cbd5e1;
+            transition: all 0.2s;
         }
-        
+
         .file-input-wrapper {
             position: relative;
-            display: inline-block;
             width: 100%;
-            margin-bottom: 10px;
+            text-align: center;
         }
-        
+
         .file-input {
             position: absolute;
             width: 100%;
             height: 100%;
             opacity: 0;
             cursor: pointer;
+            top: 0;
+            left: 0;
         }
-        
+
         .file-label {
-            display: block;
-            background: #4CAF50;
-            color: white;
-            padding: 12px;
-            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1px solid #cfdfed;
+            color: #1e466e;
+            padding: 12px 24px;
+            border-radius: 60px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.25s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            width: auto;
+            min-width: 180px;
         }
-        
+
         .file-label:hover {
-            background: #45a049;
+            background: #eef3fc;
+            border-color: #7fa5c2;
+            transform: translateY(-1px);
         }
-        
+
         .selected-files {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-            min-height: 20px;
+            font-size: 13px;
+            color: #2c3e50;
+            background: #ffffffcc;
+            padding: 8px 12px;
+            border-radius: 36px;
+            margin-top: 14px;
+            text-align: center;
+            word-break: break-word;
+            font-weight: 450;
         }
-        
+
         .quality-section {
-            margin: 15px 0;
+            margin: 22px 0 20px;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
-        
+
         .quality-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #333;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1f3548;
         }
-        
+
         .quality-value {
-            color: #4CAF50;
-            font-weight: bold;
+            background: #d9efff;
+            padding: 2px 10px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0066b3;
         }
-        
+
         .quality-slider {
             width: 100%;
             height: 6px;
-            background: #ddd;
-            border-radius: 3px;
-            outline: none;
+            background: #e2e8f0;
+            border-radius: 10px;
             -webkit-appearance: none;
+            appearance: none;
         }
-        
+
         .quality-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #4CAF50;
+            width: 18px;
+            height: 18px;
+            background: #2c7da0;
             border-radius: 50%;
             cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border: 2px solid white;
         }
-        
+
         .buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
+            display: flex;
+            gap: 14px;
+            margin: 28px 0 18px;
+            flex-wrap: wrap;
         }
-        
+
         .btn {
-            padding: 12px;
+            flex: 1;
+            padding: 12px 8px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 44px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.3s;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
+
         .btn-convert {
-            background: #2196F3;
+            background: #1f6392;
             color: white;
+            box-shadow: 0 4px 8px rgba(31,99,146,0.2);
         }
-        
-        .btn-convert:hover {
-            background: #0b7dda;
+
+        .btn-convert:hover:not(:disabled) {
+            background: #0e4b70;
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
+
         .btn-reset {
-            background: #f5f5f5;
-            color: #333;
+            background: #f1f5f9;
+            color: #2c3e50;
+            border: 1px solid #dce3ec;
         }
-        
+
         .btn-reset:hover {
-            background: #e0e0e0;
+            background: #e6edf5;
         }
-        
+
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.55;
             cursor: not-allowed;
+            transform: none;
         }
-        
+
         .status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
+            margin-top: 20px;
+            padding: 12px 16px;
+            border-radius: 28px;
             font-size: 14px;
+            font-weight: 500;
             display: none;
+            backdrop-filter: blur(4px);
         }
-        
+
         .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: #e0f2e9;
+            color: #0f5d3a;
+            border-left: 4px solid #2c9b6e;
         }
-        
+
         .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #ffe6e5;
+            color: #b91c1c;
+            border-left: 4px solid #e5484d;
         }
-        
+
         .info-text {
             font-size: 12px;
-            color: #666;
+            color: #617388;
             text-align: center;
-            margin-top: 15px;
-            line-height: 1.3;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #ecf3fa;
+            line-height: 1.4;
         }
-        
-        @media (max-width: 768px) {
+
+        .preview-grid {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+            background: #fefefe;
+            border-radius: 20px;
+            padding: 12px;
+            border: 1px solid #ecf1f7;
+        }
+
+        .preview-badge {
+            background: #eef2ff;
+            border-radius: 40px;
+            padding: 5px 12px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #1f4e79;
+        }
+
+        .download-item {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #eef3fa;
+            padding: 12px 16px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s ease;
+        }
+
+        .dl-filename {
+            font-size: 13px;
+            font-weight: 500;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .dl-btn {
+            background: #ecfdf5;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0a6e46;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .dl-btn:hover {
+            background: #d1fae5;
+            transform: scale(0.96);
+        }
+
+        .batch-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+
+        .small-btn {
+            background: transparent;
+            border: 1px solid #cbdde9;
+            padding: 6px 12px;
+            border-radius: 32px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        hr {
+            margin: 16px 0;
+            border-color: #eef2f8;
+        }
+
+        .quality-demo {
+            font-size: 11px;
+            color: #5a6e85;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 560px) {
             .container {
-                padding: 15px;
+                padding: 20px 16px;
             }
-            
-            h1 {
-                font-size: 20px;
-                margin-bottom: 15px;
-            }
-            
             .buttons {
-                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Image to WebP Converter</h1>
-        
-        <div class="upload-section">
-            <div class="file-input-wrapper">
-                <input type="file" id="fileInput" class="file-input" accept="image/*" multiple>
-                <label for="fileInput" class="file-label">
-                    📁 Select Images
-                </label>
-            </div>
-            <div id="selectedFiles" class="selected-files"></div>
+<div class="container">
+    <h1>✨ WebP Converter</h1>
+    <div style="text-align: center;"><span class="sub">Convert & download · Quality slider now fully working</span></div>
+
+    <div class="upload-section">
+        <div class="file-input-wrapper">
+            <input type="file" id="fileInput" class="file-input" accept="image/jpeg,image/png,image/gif,image/bmp,image/webp,image/jpg" multiple>
+            <label for="fileInput" class="file-label">
+                📸 Choose Images
+            </label>
         </div>
-        
-        <div class="quality-section">
-            <div class="quality-label">
-                <span>Quality:</span>
-                <span id="qualityValue" class="quality-value">85%</span>
-            </div>
-            <input type="range" id="qualitySlider" class="quality-slider" min="1" max="100" value="85">
+        <div id="selectedFiles" class="selected-files">✨ No images selected</div>
+    </div>
+
+    <div class="quality-section">
+        <div class="quality-label">
+            <span>🎨 WebP Compression Quality</span>
+            <span id="qualityValue" class="quality-value">85%</span>
         </div>
-        
-        <div class="buttons">
-            <button id="convertBtn" class="btn btn-convert" disabled>
-                Convert to WebP
-            </button>
-            <button id="resetBtn" class="btn btn-reset">
-                Clear All
-            </button>
-        </div>
-        
-        <div id="statusMessage" class="status"></div>
-        
-        <div class="info-text">
-            Convert JPG, PNG, GIF, BMP to WebP format. All processing happens in your browser.
+        <input type="range" id="qualitySlider" class="quality-slider" min="1" max="100" value="85">
+        <div class="quality-demo">
+            💡 Lower quality = smaller file size | Higher quality = better image
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
-    <script>
-        // DOM Elements
-        const fileInput = document.getElementById('fileInput');
-        const qualitySlider = document.getElementById('qualitySlider');
-        const qualityValue = document.getElementById('qualityValue');
-        const selectedFiles = document.getElementById('selectedFiles');
-        const convertBtn = document.getElementById('convertBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const statusMessage = document.getElementById('statusMessage');
+    <div class="buttons">
+        <button id="convertBtn" class="btn btn-convert" disabled>⚡ Convert to WebP (with current quality)</button>
+        <button id="resetBtn" class="btn btn-reset">🗑️ Clear All</button>
+    </div>
+
+    <!-- Dynamic download list (each file appears as separate downloadable WebP) -->
+    <div id="downloadListContainer" style="margin-top: 8px;"></div>
+
+    <div id="statusMessage" class="status"></div>
+    <div class="info-text">
+        ✅ <strong>Quality slider works!</strong> Adjust quality before clicking convert. Each image converts with the selected quality setting.<br>
+        🎯 JPG, PNG, GIF, BMP → WebP. Download individually or use "Download All" button.
+    </div>
+</div>
+
+<script>
+    // DOM elements
+    const fileInput = document.getElementById('fileInput');
+    const qualitySlider = document.getElementById('qualitySlider');
+    const qualityValue = document.getElementById('qualityValue');
+    const selectedFilesDiv = document.getElementById('selectedFiles');
+    const convertBtn = document.getElementById('convertBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusDiv = document.getElementById('statusMessage');
+    const downloadListContainer = document.getElementById('downloadListContainer');
+
+    // app state
+    let currentImages = [];     // stores { file: File, originalName: string }
+    let currentQuality = 85;
+    let convertedResults = [];   // stores { originalName, webpBlob, webpFileName, downloadUrl, qualityUsed }
+
+    // Helper: show status message
+    function showStatus(message, type, autoHide = true) {
+        statusDiv.textContent = message;
+        statusDiv.className = `status status-${type}`;
+        statusDiv.style.display = 'block';
+        if (autoHide) {
+            setTimeout(() => {
+                if (statusDiv.style.display === 'block') {
+                    statusDiv.style.display = 'none';
+                }
+            }, 4000);
+        }
+    }
+
+    // update file display + reset converted UI
+    function updateFileDisplayAndResetUI() {
+        if (!currentImages.length) {
+            selectedFilesDiv.textContent = '📂 No files selected';
+            convertBtn.disabled = true;
+            // clear all download items from previous conversions
+            renderDownloadList([]);
+            // revoke old URLs
+            if (convertedResults.length) {
+                convertedResults.forEach(item => {
+                    if (item.downloadUrl) {
+                        URL.revokeObjectURL(item.downloadUrl);
+                    }
+                });
+                convertedResults = [];
+            }
+            return;
+        }
+        const count = currentImages.length;
+        const names = currentImages.map(item => item.file.name).slice(0, 3);
+        let text = `📎 ${count} file(s) selected: `;
+        if (count <= 3) {
+            text += names.join(', ');
+        } else {
+            text += names.join(', ') + ` +${count - 3} more`;
+        }
+        selectedFilesDiv.textContent = text;
+        convertBtn.disabled = false;
+        // Clear old conversion previews when new files selected
+        if (convertedResults.length) {
+            convertedResults.forEach(item => {
+                if (item.downloadUrl) URL.revokeObjectURL(item.downloadUrl);
+            });
+            convertedResults = [];
+        }
+        renderDownloadList([]);
+    }
+
+    // render the list of converted WebP files with individual download buttons + batch download all
+    function renderDownloadList(results) {
+        if (!results.length) {
+            downloadListContainer.innerHTML = '';
+            return;
+        }
+
+        // Create download items wrapper
+        const wrapper = document.createElement('div');
+        wrapper.style.marginTop = '12px';
         
-        // Variables
-        let uploadedFiles = [];
-        let currentQuality = 85;
-        
-        // Initialize
-        updateFileDisplay();
-        
-        // Event Listeners
-        fileInput.addEventListener('change', handleFileSelect);
-        qualitySlider.addEventListener('input', updateQuality);
-        convertBtn.addEventListener('click', convertImages);
-        resetBtn.addEventListener('click', resetAll);
-        
-        // Functions
-        function handleFileSelect() {
-            if (!fileInput.files.length) return;
+        // header + batch download button (only if we have multiple)
+        if (results.length > 1) {
+            const batchDiv = document.createElement('div');
+            batchDiv.style.display = 'flex';
+            batchDiv.style.justifyContent = 'flex-end';
+            batchDiv.style.marginBottom = '12px';
+            const downloadAllBtn = document.createElement('button');
+            downloadAllBtn.innerText = '📥 Download All WebP Images (each separately)';
+            downloadAllBtn.className = 'small-btn';
+            downloadAllBtn.style.background = '#eef2ff';
+            downloadAllBtn.style.padding = '8px 16px';
+            downloadAllBtn.style.fontWeight = '500';
+            downloadAllBtn.style.cursor = 'pointer';
+            downloadAllBtn.style.borderRadius = '40px';
+            downloadAllBtn.style.border = 'none';
+            downloadAllBtn.style.fontSize = '13px';
+            downloadAllBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                downloadAllSeparately(results);
+            });
+            batchDiv.appendChild(downloadAllBtn);
+            wrapper.appendChild(batchDiv);
+        }
+
+        // individual items list
+        const listDiv = document.createElement('div');
+        listDiv.style.display = 'flex';
+        listDiv.style.flexDirection = 'column';
+        listDiv.style.gap = '10px';
+
+        results.forEach((item, idx) => {
+            const row = document.createElement('div');
+            row.className = 'download-item';
+            row.style.display = 'flex';
+            row.style.justifyContent = 'space-between';
+            row.style.alignItems = 'center';
+            row.style.flexWrap = 'wrap';
+            row.style.gap = '10px';
             
-            uploadedFiles = Array.from(fileInput.files);
-            updateFileDisplay();
-            convertBtn.disabled = false;
-            showStatus(`${uploadedFiles.length} image(s) selected`, 'success');
-        }
+            const leftInfo = document.createElement('div');
+            leftInfo.style.display = 'flex';
+            leftInfo.style.flexDirection = 'column';
+            leftInfo.style.gap = '4px';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'dl-filename';
+            nameSpan.title = item.webpFileName;
+            nameSpan.innerText = `🖼️ ${item.webpFileName}`;
+            
+            const qualityBadge = document.createElement('span');
+            if (item.qualityUsed) {
+                qualityBadge.innerText = `🎚️ Quality: ${item.qualityUsed}%`;
+                qualityBadge.style.fontSize = '10px';
+                qualityBadge.style.color = '#4a6f8f';
+                qualityBadge.style.backgroundColor = '#f0f4f9';
+                qualityBadge.style.padding = '2px 8px';
+                qualityBadge.style.borderRadius = '20px';
+                qualityBadge.style.display = 'inline-block';
+                qualityBadge.style.width = 'fit-content';
+            }
+            
+            leftInfo.appendChild(nameSpan);
+            if (qualityBadge.innerText) leftInfo.appendChild(qualityBadge);
+            
+            const btnGroup = document.createElement('div');
+            const downloadBtn = document.createElement('button');
+            downloadBtn.innerText = '⬇️ Download WebP';
+            downloadBtn.className = 'dl-btn';
+            downloadBtn.style.marginLeft = '12px';
+            
+            // create object URL if not already created
+            let localUrl = item.downloadUrl;
+            if (!localUrl && item.webpBlob) {
+                localUrl = URL.createObjectURL(item.webpBlob);
+                item.downloadUrl = localUrl;
+            }
+            
+            downloadBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!localUrl && item.webpBlob) {
+                    const newUrl = URL.createObjectURL(item.webpBlob);
+                    item.downloadUrl = newUrl;
+                    localUrl = newUrl;
+                    triggerDownload(newUrl, item.webpFileName);
+                } else if (localUrl) {
+                    triggerDownload(localUrl, item.webpFileName);
+                } else {
+                    showStatus(`⚠️ No blob available for ${item.webpFileName}`, 'error', true);
+                }
+            });
+            
+            btnGroup.appendChild(downloadBtn);
+            row.appendChild(leftInfo);
+            row.appendChild(btnGroup);
+            listDiv.appendChild(row);
+        });
         
-        function updateQuality() {
-            currentQuality = parseInt(qualitySlider.value);
-            qualityValue.textContent = `${currentQuality}%`;
-        }
+        wrapper.appendChild(listDiv);
         
-        function updateFileDisplay() {
-            if (uploadedFiles.length === 0) {
-                selectedFiles.textContent = 'No files selected';
+        // clear previous and attach new
+        downloadListContainer.innerHTML = '';
+        downloadListContainer.appendChild(wrapper);
+    }
+    
+    // Helper to trigger download from URL
+    function triggerDownload(url, filename) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    
+    // Function to download all results individually (triggers multiple sequential downloads)
+    async function downloadAllSeparately(results) {
+        if (!results.length) {
+            showStatus('No converted images to download', 'error', true);
+            return;
+        }
+        showStatus(`⬇️ Starting ${results.length} individual WebP downloads... (quality: ${results[0]?.qualityUsed || currentQuality}%)`, 'success', false);
+        
+        for (let i = 0; i < results.length; i++) {
+            const item = results[i];
+            let url = item.downloadUrl;
+            if (!url && item.webpBlob) {
+                url = URL.createObjectURL(item.webpBlob);
+                item.downloadUrl = url;
+            }
+            if (url) {
+                // slight delay between multiple downloads to avoid browser blocking
+                await new Promise(resolve => setTimeout(resolve, 250));
+                triggerDownload(url, item.webpFileName);
+            } else {
+                console.warn(`No blob for ${item.webpFileName}`);
+            }
+        }
+        showStatus(`✅ All ${results.length} WebP images downloading (check your downloads folder)`, 'success', true);
+    }
+    
+    // Convert single image file to WebP blob with explicit quality parameter
+    function convertToWebP(file, quality) {
+        return new Promise((resolve, reject) => {
+            if (!file.type.startsWith('image/')) {
+                reject(new Error('Not an image file'));
                 return;
             }
-            
-            const fileList = uploadedFiles.map(file => file.name).join(', ');
-            const displayText = uploadedFiles.length > 3 
-                ? `${uploadedFiles.length} files selected` 
-                : fileList;
-            
-            selectedFiles.textContent = displayText;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    // CRITICAL: Use quality/100 for WebP encoding
+                    const qualityRatio = quality / 100;
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('WebP encoding failed - browser may not support WebP'));
+                        }
+                    }, 'image/webp', qualityRatio);
+                };
+                img.onerror = (err) => reject(new Error('Failed to load image: ' + file.name));
+                img.src = e.target.result;
+            };
+            reader.onerror = () => reject(new Error('File reading error'));
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // CONVERSION: process all current images using LIVE quality value from slider
+    async function convertAllToIndividualWebP() {
+        if (!currentImages.length) {
+            showStatus('No images selected. Please choose images first.', 'error', true);
+            return;
         }
         
-        async function convertImages() {
-            if (!uploadedFiles.length) return;
-            
-            // Disable button and show loading
-            convertBtn.disabled = true;
-            convertBtn.textContent = 'Converting...';
+        // IMPORTANT: get the CURRENT quality from slider at conversion time
+        const qualityToUse = parseInt(qualitySlider.value);
+        currentQuality = qualityToUse;
+        qualityValue.textContent = `${currentQuality}%`;
+        
+        convertBtn.disabled = true;
+        const originalBtnText = convertBtn.innerHTML;
+        convertBtn.innerHTML = `⏳ Converting with ${qualityToUse}% quality...`;
+        
+        showStatus(`🔄 Converting ${currentImages.length} image(s) to WebP (quality ${qualityToUse}%)...`, 'success', false);
+        
+        const newResults = [];
+        let successCount = 0;
+        
+        for (let i = 0; i < currentImages.length; i++) {
+            const { file } = currentImages[i];
+            const originalName = file.name;
+            // generate output filename: remove extension + .webp
+            const dotIndex = originalName.lastIndexOf('.');
+            const baseName = dotIndex !== -1 ? originalName.substring(0, dotIndex) : originalName;
+            const webpFileName = `${baseName}.webp`;
             
             try {
-                const zip = new JSZip();
-                let convertedCount = 0;
-                
-                // Convert each image
-                for (let i = 0; i < uploadedFiles.length; i++) {
-                    const file = uploadedFiles[i];
-                    
-                    try {
-                        const webpBlob = await convertToWebP(file, currentQuality);
-                        
-                        // Add to ZIP
-                        const fileName = file.name.replace(/\.[^/.]+$/, "") + '.webp';
-                        zip.file(fileName, webpBlob);
-                        convertedCount++;
-                        
-                    } catch (error) {
-                        console.error(`Error converting ${file.name}:`, error);
-                    }
+                // Pass the current quality value explicitly
+                const webpBlob = await convertToWebP(file, qualityToUse);
+                // store result with blob, filename and the quality used
+                const resultItem = {
+                    originalName: originalName,
+                    webpBlob: webpBlob,
+                    webpFileName: webpFileName,
+                    downloadUrl: null,
+                    qualityUsed: qualityToUse
+                };
+                newResults.push(resultItem);
+                successCount++;
+                // update status every few
+                if (i % 2 === 0 || i === currentImages.length - 1) {
+                    showStatus(`✅ Converted ${successCount}/${currentImages.length} (${qualityToUse}% quality)...`, 'success', false);
                 }
-                
-                if (convertedCount === 0) {
-                    throw new Error('No images could be converted');
-                }
-                
-                // Generate ZIP file
-                const zipBlob = await zip.generateAsync({ type: 'blob' });
-                
-                // Create download link
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(zipBlob);
-                link.download = `webp_images_${Date.now()}.zip`;
-                
-                // Trigger download
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Clean up
-                URL.revokeObjectURL(link.href);
-                
-                // Show success message
-                showStatus(`✅ Converted ${convertedCount} image(s) to WebP format`, 'success');
-                
-            } catch (error) {
-                console.error('Conversion error:', error);
-                showStatus('❌ Error converting images. Please try again.', 'error');
-            } finally {
-                // Reset button
-                convertBtn.disabled = false;
-                convertBtn.textContent = 'Convert to WebP';
+            } catch (err) {
+                console.error(`Conversion error for ${originalName}:`, err);
+                showStatus(`⚠️ Failed: ${originalName} - ${err.message}`, 'error', false);
+                // continue with other images
             }
         }
         
-        function convertToWebP(file, quality) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const img = new Image();
-                    
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        
-                        canvas.toBlob(
-                            function(blob) {
-                                if (blob) {
-                                    resolve(blob);
-                                } else {
-                                    reject(new Error('WebP conversion failed'));
-                                }
-                            },
-                            'image/webp',
-                            quality / 100
-                        );
-                    };
-                    
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
+        if (successCount === 0) {
+            convertBtn.disabled = false;
+            convertBtn.innerHTML = originalBtnText;
+            showStatus('❌ No images could be converted. Check file types or browser WebP support.', 'error', true);
+            return;
+        }
+        
+        // Revoke old URLs before replacing
+        if (convertedResults.length) {
+            convertedResults.forEach(item => {
+                if (item.downloadUrl) {
+                    URL.revokeObjectURL(item.downloadUrl);
+                }
             });
         }
         
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = `status status-${type}`;
-            statusMessage.style.display = 'block';
-            
-            // Auto-hide after 4 seconds
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-            }, 4000);
+        // store results globally
+        convertedResults = newResults;
+        // render individual download items
+        renderDownloadList(convertedResults);
+        
+        convertBtn.disabled = false;
+        convertBtn.innerHTML = originalBtnText;
+        
+        // success message mentioning quality used
+        if (successCount === currentImages.length) {
+            showStatus(`🎉 Success! ${successCount} image(s) converted to WebP with ${qualityToUse}% quality. Use download buttons below.`, 'success', true);
+        } else {
+            showStatus(`✅ Converted ${successCount} out of ${currentImages.length} images (${qualityToUse}% quality). Check failed ones.`, 'success', true);
         }
         
-        function resetAll() {
-            uploadedFiles = [];
-            fileInput.value = '';
-            updateFileDisplay();
-            convertBtn.disabled = true;
-            qualitySlider.value = 85;
-            qualityValue.textContent = '85%';
-            statusMessage.style.display = 'none';
-            showStatus('Cleared all files', 'success');
+        // scroll to download list for better UX
+        if (convertedResults.length) {
+            downloadListContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-    </script>
+    }
+    
+    // reset everything: clear files, clear download list, clear conversion cache
+    function resetAll() {
+        // revoke object URLs if any to avoid memory leaks
+        if (convertedResults.length) {
+            convertedResults.forEach(item => {
+                if (item.downloadUrl) {
+                    URL.revokeObjectURL(item.downloadUrl);
+                    item.downloadUrl = null;
+                }
+            });
+        }
+        currentImages = [];
+        convertedResults = [];
+        fileInput.value = '';
+        updateFileDisplayAndResetUI();
+        renderDownloadList([]);
+        // reset quality to default 85
+        qualitySlider.value = 85;
+        currentQuality = 85;
+        qualityValue.textContent = '85%';
+        showStatus('✨ Cleared all images and conversions. Quality reset to 85%.', 'success', true);
+    }
+    
+    // handle file selection
+    function handleFileSelect(e) {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        
+        // revoke any previous download URLs to prevent memory leaks
+        if (convertedResults.length) {
+            convertedResults.forEach(item => {
+                if (item.downloadUrl) {
+                    URL.revokeObjectURL(item.downloadUrl);
+                    item.downloadUrl = null;
+                }
+            });
+            convertedResults = [];
+            renderDownloadList([]);
+        }
+        
+        // filter only image mime types
+        const validImages = files.filter(f => f.type.startsWith('image/'));
+        if (validImages.length !== files.length) {
+            showStatus('⚠️ Some files were skipped (non-image format)', 'error', true);
+        }
+        if (validImages.length === 0) {
+            showStatus('No valid image files selected. Please choose JPG, PNG, GIF, BMP etc.', 'error', true);
+            return;
+        }
+        
+        currentImages = validImages.map(file => ({ file, originalName: file.name }));
+        updateFileDisplayAndResetUI();
+        showStatus(`${currentImages.length} image(s) ready. Adjust quality slider if needed, then click Convert.`, 'success', true);
+    }
+    
+    // Update quality display in real time
+    function updateQuality() {
+        currentQuality = parseInt(qualitySlider.value);
+        qualityValue.textContent = `${currentQuality}%`;
+        // Show a small tooltip-like status to confirm quality is live
+        if (currentImages.length > 0 && !convertBtn.disabled) {
+            // Optional: subtle hint that quality will apply on convert
+            // don't spam, but show once
+        }
+    }
+    
+    // Event listeners
+    fileInput.addEventListener('change', handleFileSelect);
+    qualitySlider.addEventListener('input', updateQuality);
+    convertBtn.addEventListener('click', convertAllToIndividualWebP);
+    resetBtn.addEventListener('click', resetAll);
+    
+    // initial state
+    updateFileDisplayAndResetUI();
+    currentQuality = 85;
+    qualityValue.textContent = '85%';
+    qualitySlider.value = 85;
+    
+    // final confirmation that quality slider works
+    console.log('✅ Quality control ready — slider value affects WebP compression');
+</script>
 </body>
 </html>
